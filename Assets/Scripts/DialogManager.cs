@@ -7,6 +7,7 @@ using UnityEditor;
 
 namespace DialogManager {
     public class DialogManager : MonoBehaviour {
+        #region Constant Values
         private const string NAMETAG_NAME_PREFIX    = "NameTag";
         private const string CONTENT_NAME_PREFIX   = "Content";
         private const int FLAG_LEFT                 = 0b100000;
@@ -15,21 +16,33 @@ namespace DialogManager {
         private const int FLAG_TOP                  = 0b000100;
         private const int FLAG_BOTTOM               = 0b000010;
         private const int FLAG_V_CENTER             = 0b000001;
+        #endregion
 
+
+
+        #region public fields
         public static DialogManager Instance;
         public TMP_FontAsset defaultFont;
+        #endregion
 
+        #region serialized public fields
         [SerializeField] public Canvas targetCanvasToDrawDialog;
         [SerializeField] public Backgrounds backgrounds;
         [SerializeField] public List<Dialog> dialogs;
 
         [SerializeField] public bool bApplyMarginToNameTag = false;
         [SerializeField] public bool bApplyPaddingToNameTag = false;
+        #endregion
 
-        Dictionary<Int32, GameObject> nameTagBGInstances = new Dictionary<int, GameObject>(), contentBGInstances = new Dictionary<int, GameObject>();
+        #region private fields
+        Dictionary<Int32, GameObject>   nameTagBGInstances = new Dictionary<int, GameObject>(),
+                                        contentBGInstances = new Dictionary<int, GameObject>();
         Modification plannedModification;
         GameObject currentActiveDialog;
         int nextIndex;
+        #endregion
+
+
 
         #region Dispatch
         public int DispatchDialog() {
@@ -43,18 +56,16 @@ namespace DialogManager {
                 return (int) Dialog.DialogError.INVALID_INDEX;
             }
 
-            ApplyPlannedModificationIfExistsAndDisplaySelectedDialog(dialogs[nextIndex]);
+            ApplyPlannedModificationIfExistsAndDisplaySelectedDialog(dialogs[nextIndex++]);
 
-            return nextIndex++;
+            return nextIndex;
         }
 
         public void DispatchDialog(int index) {
-            #region Exception Handling
             if(index < 0) {
                 Debug.Log("Error: Invalid index. \nYour input was: " + index);
                 return;
             }
-            #endregion
 
             ApplyPlannedModificationIfExistsAndDisplaySelectedDialog(dialogs[index]);
         }
@@ -72,8 +83,10 @@ namespace DialogManager {
 
         #region Modification
         public void ApplyModification(Modification modification) {
-            RectTransform contentRT = currentActiveDialog.transform as RectTransform;
-            RectTransform nameTagRT = currentActiveDialog.FindAllChildrenByNameThatContains(NAMETAG_NAME_PREFIX)[0].transform as RectTransform;
+            RectTransform contentRT
+                = currentActiveDialog.transform as RectTransform;
+            RectTransform nameTagRT
+                = currentActiveDialog.FindAllChildrenByNameThatContains(NAMETAG_NAME_PREFIX)[0].transform as RectTransform;
 
             int flag = ConvertAnchorToFlag(modification.anchor);
             
@@ -83,7 +96,7 @@ namespace DialogManager {
             ApplyPaddings(nameTagRT, contentRT, modification.padding);
             ApplyMargins(nameTagRT, contentRT, modification.margin);
 
-            foreach(PixelPerUnitMultiplierMarker marker in currentActiveDialog.GetComponentsInChildren<PixelPerUnitMultiplierMarker>())
+            foreach(RoundnessMarker marker in currentActiveDialog.GetComponentsInChildren<RoundnessMarker>())
                 ApplyPixelPerUnitMultiplierToImage(marker.transform, modification.pixelPerUnitMultiplier);
 
             MoveItemsMatchingFlag(nameTagRT, contentRT, flag);
@@ -112,8 +125,15 @@ namespace DialogManager {
         }
 
         private GameObject PrepareNameTag(Dialog.NameTag nameTag) {
-            if(!nameTagBGInstances.ContainsKey(nameTag.bgIndex))
-                nameTagBGInstances.Add(nameTag.bgIndex, Instantiate(backgrounds.nameTagBGPrefabs[nameTag.bgIndex], targetCanvasToDrawDialog.transform));
+            if(!nameTagBGInstances.ContainsKey(nameTag.bgIndex)) {
+                nameTagBGInstances.Add(
+                    nameTag.bgIndex, 
+                    Instantiate(
+                        backgrounds.nameTagBGPrefabs[nameTag.bgIndex],
+                        targetCanvasToDrawDialog.transform
+                    )
+                );
+            }
 
             GameObject nameTagBG = nameTagBGInstances[nameTag.bgIndex];
             nameTagBG.name = NAMETAG_NAME_PREFIX + "#" + nameTag.bgIndex;
@@ -207,18 +227,20 @@ namespace DialogManager {
 
         #region Corner Position
         private float GetHeightMatchingScaler() {
+            CanvasScaler scaler = targetCanvasToDrawDialog.GetComponent<CanvasScaler>();
             return Mathf.Lerp(
-                Screen.currentResolution.width,
-                Screen.currentResolution.height * Camera.main.aspect,
-                targetCanvasToDrawDialog.GetComponent<CanvasScaler>().matchWidthOrHeight
+                scaler.referenceResolution.x,
+                scaler.referenceResolution.y * Camera.main.aspect,
+                scaler.matchWidthOrHeight
             );
         }
 
         private float GetWidthMatchingScaler() {
+            CanvasScaler scaler = targetCanvasToDrawDialog.GetComponent<CanvasScaler>();
             return Mathf.Lerp(
-                Screen.currentResolution.width / Camera.main.aspect,
-                Screen.currentResolution.height,
-                targetCanvasToDrawDialog.GetComponent<CanvasScaler>().matchWidthOrHeight
+                scaler.referenceResolution.x / Camera.main.aspect,
+                scaler.referenceResolution.y,
+                scaler.matchWidthOrHeight
             );
         }
         #endregion

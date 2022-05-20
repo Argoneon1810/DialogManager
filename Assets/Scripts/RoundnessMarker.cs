@@ -2,4 +2,4 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PixelPerUnitMultiplierMarker : MonoBehaviour { }
+public class RoundnessMarker : MonoBehaviour { }

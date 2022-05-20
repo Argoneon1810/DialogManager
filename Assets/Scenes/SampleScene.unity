@@ -797,7 +797,7 @@ MonoBehaviour:
       fontColor: {r: 0, g: 0, b: 0, a: 0}
       fontAsset: {fileID: 0}
     modification:
-      anchor: 3
+      anchor: 0
       padding: 32
       margin: 32
       pixelPerUnitMultiplier: 2.5

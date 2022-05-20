@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6867522306204238269}
   - component: {fileID: 5861963128840793296}
+  - component: {fileID: 5098793984742378527}
   - component: {fileID: 8188871293980192110}
   m_Layer: 5
   m_Name: RimColor
@@ -45,6 +46,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044965507700720751}
   m_CullTransparentMesh: 1
+--- !u!114 &5098793984742378527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044965507700720751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4241bde30201aac40b4e3b94b1919148, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8188871293980192110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +322,7 @@ GameObject:
   - component: {fileID: 3106148708492948541}
   - component: {fileID: 2984027092450696605}
   - component: {fileID: 1050840416968321437}
+  - component: {fileID: 8087630463499585417}
   - component: {fileID: 7804248847612243986}
   m_Layer: 5
   m_Name: BackgroundColor
@@ -356,6 +370,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc18462b6f345804faf1af0440b97b91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8087630463499585417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7150561191799960367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4241bde30201aac40b4e3b94b1919148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &7804248847612243986
